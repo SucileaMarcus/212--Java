@@ -45,23 +45,25 @@ public class ContactManager extends JFrame {
 		frame.getContentPane().setLayout(null);
 		
 		JButton btnBusinessContact = new JButton("Business Contact");
+		
+		/** This method creates an instance of the BusinessContact() class and makes it visible*/
 		btnBusinessContact.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				BusinessContact businessContact = new BusinessContact();
-				
+				BusinessContact businessContact = new BusinessContact();			
 				businessContact.setVisible(true);
 			}
 		});
 		btnBusinessContact.setBounds(350, 91, 148, 23);
 		frame.getContentPane().add(btnBusinessContact);
+
 		
 		JButton btnPersonalContact = new JButton("Personal Contact");
+		/** This method creates an instance of the PersonalContact() class and makes it visible*/
 		btnPersonalContact.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {				
 				PersonalContact personalContact = new PersonalContact();				
-				personalContact.setVisible(true);
-				
+				personalContact.setVisible(true);			
 			}
 		});
 		btnPersonalContact.setBounds(151, 91, 130, 23);

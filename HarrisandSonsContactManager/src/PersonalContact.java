@@ -28,14 +28,14 @@ public class PersonalContact extends JFrame {
 	
 	private JPanel contentPane;
 	private JTable table_Personal;
-	private JTextField tbFname;
-	private JTextField tbLname;
-	private JTextField tbAddress1;
-	private JTextField tbAddress2;
-	private JTextField tbPostCode;
-	private JTextField tbTelNumber;
-	private JTextField tbEmail;
-	private JTextField tbCity;
+	private JTextField tbFname; /**text box Fname */
+	private JTextField tbLname; /** text box Lname */
+	private JTextField tbAddress1; /** text box Address1 */
+	private JTextField tbAddress2; /** text box Address2 */
+	private JTextField tbPostCode; /** text box PostCode */
+	private JTextField tbTelNumber; /** text box TelNumber */
+	private JTextField tbEmail; /** text box Email */
+	private JTextField tbCity; /** text box City */
 
 	/**
 	 * Launch the application.
@@ -73,8 +73,7 @@ public class PersonalContact extends JFrame {
 		});
 		scrollPane.setBounds(53, 92, 483, 220);
 		contentPane.add(scrollPane);
-		DbConn d = new DbConn();		
-		
+		DbConn d = new DbConn();			
 		
 		tbFname = new JTextField();
 		tbFname.setColumns(10);
@@ -108,23 +107,17 @@ public class PersonalContact extends JFrame {
 		tbCity.setColumns(10);
 		tbCity.setEnabled(false);
 		
-		JLabel lblNewLabel = new JLabel("First Name");
-		
-		JLabel lblLastName = new JLabel("Last Name");
-		
-		JLabel lblEmail = new JLabel("Email");
-		
-		JLabel lblAddress = new JLabel("Address 1");
-		
-		JLabel lblNewLabel_1_1 = new JLabel("Address 2");
-		
-		JLabel lblNewLabel_1_1_1 = new JLabel("City");
-		
-		JLabel lblNewLabel_1_2 = new JLabel("Post Code");
-		
+		/** instances of JLabel */
+		JLabel lblNewLabel = new JLabel("First Name");		
+		JLabel lblLastName = new JLabel("Last Name");		
+		JLabel lblEmail = new JLabel("Email");		
+		JLabel lblAddress = new JLabel("Address 1");		
+		JLabel lblNewLabel_1_1 = new JLabel("Address 2");		
+		JLabel lblNewLabel_1_1_1 = new JLabel("City");		
+		JLabel lblNewLabel_1_2 = new JLabel("Post Code");		
 		JLabel lblNewLabel_1_2_1 = new JLabel("Tel Number");
 		
-		
+		/** instances of JButton */
 		JButton btnUpdate = new JButton("Update");
 		JButton btnRefresh = new JButton("Refresh");
 		JButton btnAddNew = new JButton("Add New");
@@ -132,32 +125,29 @@ public class PersonalContact extends JFrame {
 		JButton btnSaveSelected = new JButton("Save Selected");
 		JButton btnSave = new JButton("Save");
 	
-		btnDelete.addMouseListener(new MouseAdapter() {
+		table_Personal = new JTable();
+		table_Personal.setModel(DbUtils.resultSetToTableModel(d.GetAllPersonal()));
+		/** This method populates the text boxes based on the pressed column and rows from table_Business */
+		table_Personal.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
-				int id = Integer.parseInt(table_Personal.getValueAt(table_Personal.getSelectedRow(), 0).toString());
-				d.DeletePersonal(id);
-				table_Personal.setModel(DbUtils.resultSetToTableModel(d.GetAllPersonal()));
-				tbFname.setText("");
-				tbLname.setText("");
-				tbEmail.setText("");
-				tbAddress1.setText("");
-				tbAddress2.setText("");
-				tbCity.setText("");
-				tbPostCode.setText("");
-				tbTelNumber.setText("");
+			public void mousePressed(MouseEvent e) {
+				tbFname.setText(table_Personal.getValueAt(table_Personal.getSelectedRow(),1).toString());
+				tbLname.setText(table_Personal.getValueAt(table_Personal.getSelectedRow(),2).toString());
+				tbEmail.setText(table_Personal.getValueAt(table_Personal.getSelectedRow(),3).toString());
+				tbAddress1.setText(table_Personal.getValueAt(table_Personal.getSelectedRow(),4).toString());
+				tbAddress2.setText(table_Personal.getValueAt(table_Personal.getSelectedRow(),5).toString());
+				tbPostCode.setText(table_Personal.getValueAt(table_Personal.getSelectedRow(),6).toString());
+				tbCity.setText(table_Personal.getValueAt(table_Personal.getSelectedRow(),7).toString());
+				tbTelNumber.setText(table_Personal.getValueAt(table_Personal.getSelectedRow(),8).toString());
+				
 			}
 		});
-				
-		btnRefresh.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				table_Personal.setModel(DbUtils.resultSetToTableModel(d.GetAllPersonal()));
-			}
-		});		
+		scrollPane.setViewportView(table_Personal);
 		
+		/** This method disables all buttons but btnSaveNew */
 		btnAddNew.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				/** text boxes enabled */
 				tbFname.setEnabled(true);
 				tbLname.setEnabled(true);
 				tbEmail.setEnabled(true);
@@ -165,7 +155,8 @@ public class PersonalContact extends JFrame {
 				tbAddress2.setEnabled(true);
 				tbCity.setEnabled(true);
 				tbPostCode.setEnabled(true);
-				tbTelNumber.setEnabled(true);	
+				tbTelNumber.setEnabled(true);
+				/** text boxes emptied */
 				tbFname.setText("");
 				tbLname.setText("");
 				tbEmail.setText("");
@@ -182,69 +173,39 @@ public class PersonalContact extends JFrame {
 								
 			}
 		});		
-				
-		btnSaveSelected.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				String Fname = tbFname.getText();
-				String Lname = tbLname.getText();
-				String Email = tbEmail.getText();
-				String Address1 = tbAddress1.getText();
-				String Address2 = tbAddress2.getText();
-				String PostCode = tbPostCode.getText();
-				String City = tbCity.getText();
-				String TelNumber = tbTelNumber.getText();
-				int id = Integer.parseInt(table_Personal.getValueAt(table_Personal.getSelectedRow(), 0).toString());					
-				d.UpdatePersonal(Fname, Lname, Email, Address1, Address2, PostCode, City, TelNumber, id);
-				table_Personal.setModel(DbUtils.resultSetToTableModel(d.GetAllPersonal()));
-				btnUpdate.setEnabled(true);
-				btnAddNew.setEnabled(true);
-				btnSave.setEnabled(false);
-				btnDelete.setEnabled(true);
-				btnSaveSelected.setEnabled(false);
-				tbFname.setText("");
-				tbLname.setText("");
-				tbEmail.setText("");
-				tbAddress1.setText("");
-				tbAddress2.setText("");
-				tbCity.setText("");
-				tbPostCode.setText("");
-				tbTelNumber.setText("");
-				tbFname.setEnabled(false);
-				tbLname.setEnabled(false);
-				tbEmail.setEnabled(false);
-				tbAddress1.setEnabled(false);
-				tbAddress2.setEnabled(false);
-				tbCity.setEnabled(false);
-				tbPostCode.setEnabled(false);
-				tbTelNumber.setEnabled(false);
-			}
-		});	
-		btnSaveSelected.setEnabled(false);		
 		
+		/** This method adds new entry by calling the method InsertPersonal() from class DbConn */
 		btnSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				/** checks if the text box is empty */
 				if (tbFname.getText().isEmpty()) {
 					JOptionPane.showMessageDialog(null, "Please enter First Name!");
 				}
+				/** checks if the text box is empty */
 				else if (tbLname.getText().isEmpty()){
 						JOptionPane.showMessageDialog(null, "Please enter Last Name!");
 				}
+				/** checks if the text box is empty */
 				else if (tbEmail.getText().isEmpty()){
 					JOptionPane.showMessageDialog(null, "Please enter Email!");
 				}
+				/** checks if the text box is empty */
 				else if (tbAddress1.getText().isEmpty()){
 					JOptionPane.showMessageDialog(null, "Please enter Address!");
 				}
+				/** checks if the text box is empty */
 				else if (tbCity.getText().isEmpty()){
 					JOptionPane.showMessageDialog(null, "Please enter City!");
 				}
+				/** checks if the text box is empty */
 				else if (tbPostCode.getText().isEmpty()){
 					JOptionPane.showMessageDialog(null, "Please enter Post Code!");
 				}
+				/** checks if the text box is empty */
 				else if (tbTelNumber.getText().isEmpty()){
 					JOptionPane.showMessageDialog(null, "Please enter Telephone Number!");
 				}
+				/** assigns values to the variables */
 				else
 				{				
 				String Fname = tbFname.getText();
@@ -255,13 +216,16 @@ public class PersonalContact extends JFrame {
 				String PostCode = tbPostCode.getText();
 				String City = tbCity.getText();
 				String TelNumber = tbTelNumber.getText();
+				/** InsertPersonal() method is called from the DbConn class */
 				d.InsertPersonal(Fname, Lname, Email, Address1, Address2, PostCode, City, TelNumber);
+				/** table_Personal re-populated */
 				table_Personal.setModel(DbUtils.resultSetToTableModel(d.GetAllPersonal()));
 				btnUpdate.setEnabled(true);
 				btnAddNew.setEnabled(true);
 				btnSave.setEnabled(false);
 				btnDelete.setEnabled(true);
 				btnSaveSelected.setEnabled(false);
+				/** text boxes emptied */
 				tbFname.setText("");
 				tbLname.setText("");
 				tbEmail.setText("");
@@ -270,6 +234,7 @@ public class PersonalContact extends JFrame {
 				tbCity.setText("");
 				tbPostCode.setText("");
 				tbTelNumber.setText("");
+				/** text boxes disabled */
 				tbFname.setEnabled(false);
 				tbLname.setEnabled(false);
 				tbEmail.setEnabled(false);
@@ -280,13 +245,14 @@ public class PersonalContact extends JFrame {
 				tbTelNumber.setEnabled(false);
 				}
 			}
-		});
-		
+		});		
 		btnSave.setEnabled(false);
-				
+			
+		/** This method disables all buttons but btnSaveSelected */
 		btnUpdate.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				/** text boxes enabled */
 				tbFname.setEnabled(true);
 				tbLname.setEnabled(true);
 				tbEmail.setEnabled(true);
@@ -304,26 +270,86 @@ public class PersonalContact extends JFrame {
 			
 			}
 		});
-
-		table_Personal = new JTable();
-		table_Personal.setModel(DbUtils.resultSetToTableModel(d.GetAllPersonal()));
-		table_Personal.addMouseListener(new MouseAdapter() {
+		
+		/** This method updates the selected entry 
+		 * by calling the updatePersonal() method from dbConn 
+		 * and re-populates the table_Personal 		
+		 */
+		btnSaveSelected.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mousePressed(MouseEvent e) {
-				tbFname.setText(table_Personal.getValueAt(table_Personal.getSelectedRow(),1).toString());
-				tbLname.setText(table_Personal.getValueAt(table_Personal.getSelectedRow(),2).toString());
-				tbEmail.setText(table_Personal.getValueAt(table_Personal.getSelectedRow(),3).toString());
-				tbAddress1.setText(table_Personal.getValueAt(table_Personal.getSelectedRow(),4).toString());
-				tbAddress2.setText(table_Personal.getValueAt(table_Personal.getSelectedRow(),5).toString());
-				tbPostCode.setText(table_Personal.getValueAt(table_Personal.getSelectedRow(),6).toString());
-				tbCity.setText(table_Personal.getValueAt(table_Personal.getSelectedRow(),7).toString());
-				tbTelNumber.setText(table_Personal.getValueAt(table_Personal.getSelectedRow(),8).toString());
-				
+			public void mouseClicked(MouseEvent e) {
+				/** assigns values to variables */
+				String Fname = tbFname.getText();
+				String Lname = tbLname.getText();
+				String Email = tbEmail.getText();
+				String Address1 = tbAddress1.getText();
+				String Address2 = tbAddress2.getText();
+				String PostCode = tbPostCode.getText();
+				String City = tbCity.getText();
+				String TelNumber = tbTelNumber.getText();
+				int id = Integer.parseInt(table_Personal.getValueAt(table_Personal.getSelectedRow(), 0).toString());	
+				/** Calls the UpdatePersonal() method from DbConn class passing the parameters initialized above */
+				d.UpdatePersonal(Fname, Lname, Email, Address1, Address2, PostCode, City, TelNumber, id);
+				/** Re-populates the table_Personal */
+				table_Personal.setModel(DbUtils.resultSetToTableModel(d.GetAllPersonal()));
+				btnUpdate.setEnabled(true);
+				btnAddNew.setEnabled(true);
+				btnSave.setEnabled(false);
+				btnDelete.setEnabled(true);
+				btnSaveSelected.setEnabled(false);
+				/** text boxes emptied */
+				tbFname.setText("");
+				tbLname.setText("");
+				tbEmail.setText("");
+				tbAddress1.setText("");
+				tbAddress2.setText("");
+				tbCity.setText("");
+				tbPostCode.setText("");
+				tbTelNumber.setText("");
+				/** text boxes disabled */
+				tbFname.setEnabled(false);
+				tbLname.setEnabled(false);
+				tbEmail.setEnabled(false);
+				tbAddress1.setEnabled(false);
+				tbAddress2.setEnabled(false);
+				tbCity.setEnabled(false);
+				tbPostCode.setEnabled(false);
+				tbTelNumber.setEnabled(false);
 			}
-		});
-		scrollPane.setViewportView(table_Personal);
+		});	
+		btnSaveSelected.setEnabled(false);
+		
+		/** This method Refreshes the table_Personal by calling the GetAllPersonal() method */
+		btnRefresh.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				table_Personal.setModel(DbUtils.resultSetToTableModel(d.GetAllPersonal()));
+			}
+		});	
+		
+		/** This method deletes entry based on the selected ID */
+		btnDelete.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int id = Integer.parseInt(table_Personal.getValueAt(table_Personal.getSelectedRow(), 0).toString());
+				/** Calls DeletePersonal() method from DbConn */
+				d.DeletePersonal(id);
+				/** Re-populates the table_Personal by calling the GetAllPersonal() method*/
+				table_Personal.setModel(DbUtils.resultSetToTableModel(d.GetAllPersonal()));
+				/** text boxes emptied */
+				tbFname.setText("");
+				tbLname.setText("");
+				tbEmail.setText("");
+				tbAddress1.setText("");
+				tbAddress2.setText("");
+				tbCity.setText("");
+				tbPostCode.setText("");
+				tbTelNumber.setText("");
+			}
+		});	
 		
 		JButton btnCancel = new JButton("Cancel");
+		/** This method disables btnAddNew and btnUpdate */
 		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tbFname.setEnabled(false);
@@ -342,6 +368,7 @@ public class PersonalContact extends JFrame {
 			}
 		});
 		
+		/** This method disposed the current JFrame class */
 		JButton btnMainMenu = new JButton("Main Menu");
 		btnMainMenu.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
